@@ -21,6 +21,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@commander-js/extra-typings": "^14.0.0"
+    "@commander-js/extra-typings": "^14.0.0",
+    "@stdlib/datasets-female-first-names-en": "^0.2.2",
+    "@stdlib/datasets-male-first-names-en": "^0.2.2"
   }
 }

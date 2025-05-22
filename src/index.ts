@@ -1,7 +1,7 @@
 import { Command } from '@commander-js/extra-typings'
 
-import { readFileStream, writeMapToFile } from '@/file/utils'
-import { fileProcessor } from '@/file/processors'
+import { findDuplicateCompanies } from '@/services/duplicates'
+import { writeToFile } from '@/file/utils'
 
 const program = new Command()
 
@@ -13,17 +13,13 @@ program
   .option('-o, --output <output>', 'Output file path')
   .action(async (file, options) => {
     console.log('Finding potential duplicate company names in:', file)
-    const resultsMap = new Map<string, string[]>()
-    await readFileStream({
-      filePath: file,
-      resultsMap,
-      lineProcessor: fileProcessor,
-    })
+
+    const duplicates = await findDuplicateCompanies(file)
 
     if (options.output) {
-      writeMapToFile(options.output, resultsMap)
+      writeToFile(options.output, duplicates)
     }
 
-    console.log(`Found ${resultsMap.size} potential duplicates`)
+    console.log(`Found ${Object.keys(duplicates).length} potential duplicates`)
   })
   .parse(process.argv)

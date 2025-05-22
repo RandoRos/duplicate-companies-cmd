@@ -49,16 +49,12 @@ export const readFileStream = async ({
   }
 }
 
-export const writeMapToFile = (
+export const writeToFile = <T>(
   outputFileName: string,
-  resultsMap: Map<string, string[]>
+  obj: Record<string, T>
 ) => {
   fs.writeFileSync(
     path.resolve(process.cwd(), 'files', outputFileName),
-    JSON.stringify(
-      Object.fromEntries(Array.from(resultsMap.entries())),
-      null,
-      2
-    )
+    JSON.stringify(obj, null, 2)
   )
 }

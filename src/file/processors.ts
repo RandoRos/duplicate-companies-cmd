@@ -1,7 +1,11 @@
 import type { FileLineProcessor } from '@/file/utils'
-import { getHashKey } from '@/utils'
+import { getHashKey, isPerson } from '@/utils'
 
 export const fileProcessor: FileLineProcessor = async (line, resultsMap) => {
+  if (isPerson(line)) {
+    return
+  }
+
   const hashKey = getHashKey(line)
 
   if (resultsMap.has(hashKey)) {
