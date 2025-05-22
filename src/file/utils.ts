@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import { createInterface } from 'node:readline/promises'
 
 export type FileLineProcessor = (
@@ -46,4 +47,18 @@ export const readFileStream = async ({
     rl.close()
     stream.destroy()
   }
+}
+
+export const writeMapToFile = (
+  outputFileName: string,
+  resultsMap: Map<string, string[]>
+) => {
+  fs.writeFileSync(
+    path.resolve(process.cwd(), 'files', outputFileName),
+    JSON.stringify(
+      Object.fromEntries(Array.from(resultsMap.entries())),
+      null,
+      2
+    )
+  )
 }
