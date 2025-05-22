@@ -2,22 +2,25 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { createInterface } from 'node:readline/promises'
 
-export type FileLineProcessor = (
+export type FileLineProcessor<T, O = void> = (
   line: string,
-  resultsMap: Map<string, string[]>
+  resultsMap: Map<string, T>,
+  options?: O
 ) => Promise<void>
 
-type ReadStreamParams = {
+type ReadStreamParams<T, O = void> = {
   filePath: string
-  resultsMap: Map<string, string[]>
-  lineProcessor: FileLineProcessor
+  resultsMap: Map<string, T>
+  lineProcessor: FileLineProcessor<T, O>
+  options?: O
 }
 
-export const readFileStream = async ({
+export const readFileStream = async <T, O>({
   filePath,
   resultsMap,
   lineProcessor,
-}: ReadStreamParams): Promise<void> => {
+  options,
+}: ReadStreamParams<T, O>): Promise<void> => {
   const stream = fs.createReadStream(filePath, {
     encoding: 'utf-8',
     highWaterMark: 1024,
@@ -38,7 +41,7 @@ export const readFileStream = async ({
     for await (const line of rl) {
       if (!line.trim()) continue
 
-      await lineProcessor(line, resultsMap)
+      await lineProcessor(line, resultsMap, options)
     }
   } catch (err) {
     console.error('Error processing file: ', err)
@@ -51,7 +54,7 @@ export const readFileStream = async ({
 
 export const writeToFile = <T>(
   outputFileName: string,
-  obj: Record<string, T>
+  obj: Record<string, T> | string[] | string
 ) => {
   fs.writeFileSync(
     path.resolve(process.cwd(), 'files', outputFileName),

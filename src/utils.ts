@@ -14,10 +14,10 @@ export const normalizeCompanyName = (str: string): string => {
     .trim()
 }
 
-export const getHashKey = (str: string): string => {
+export const getHashKey = (str: string, wordCount?: number): string => {
   const words = normalizeCompanyName(str).split(/\s+/)
 
-  return words.slice(0, 2).join('-')
+  return words.slice(0, wordCount || words.length).join('-')
 }
 
 export const isPerson = (str: string) => {
