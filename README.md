@@ -70,7 +70,10 @@ Options:
 ## How It Works
 
 1. **Input Processing**: Reads company names from the input file line by line
-2. **Name Normalization**: Removes common business suffixes and normalizes text
+2. **Name Normalization**: 
+   - Removes common business suffixes (Inc, LLC, Ltd, AG, SA, etc.)
+   - Normalizes special characters and punctuation
+   - Optionally removes industry-specific terms (Studios, Games, Entertainment, etc.)
 3. **Duplicate Detection**:
    - Creates hash keys from company names for grouping
    - Optionally compares using brand names

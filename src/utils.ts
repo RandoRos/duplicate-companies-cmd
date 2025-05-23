@@ -12,22 +12,22 @@ export const normalizeCompanyName = (
     .toLowerCase()
     .normalize('NFD')
     .replace(/&/g, '')
-    .replace(/[,.]/g, '')
+    .replace(/[,.:;]/g, '')
+    .replace(/['"]/g, '')
+    // Extended list of company legal suffixes - international
     .replace(
-      /\b(inc|incorporated|llc|ltd|limited|corp|corporation|plc|co|company|gmbh)\b/g,
+      /\b(inc|incorporated|llc|ltd|limited|corp|corporation|plc|co|company|gmbh|ag|sa|se|nv|spa|oy|ab|as|bv|kk|pte|srl|oü)\b/gi,
       ''
     )
-    .replace(/\s+/g, ' ')
-    .trim()
 
   if (removeKeywords) {
     normalized = normalized.replace(
-      /\b(studios?|production|entertainments?|groups?|games?|presents?|media|interactive|digital)\b/g,
+      /\b(studios?|production|entertainments?|groups?|games?|presents?|media|interactive|digital|technologies|software|solutions|development|worldwide)\b/gi,
       ''
     )
   }
 
-  return normalized
+  return normalized.replace(/\s+/g, ' ').trim()
 }
 
 export const getHashKey = (str: string, wordCount?: number): string => {
@@ -67,6 +67,6 @@ export const addToHashMap = (
   }
 }
 
-export const isSingleWorld = (str: string) => {
+export const isSingleWord = (str: string) => {
   return str.split(/-/).length === 1
 }
