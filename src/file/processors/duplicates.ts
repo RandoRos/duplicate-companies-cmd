@@ -5,6 +5,7 @@ import { levenshteinDistance } from '@/comparsions'
 export type DuplicateProcessorOptions = {
   brands?: Set<string>
   levenshtein?: boolean
+  levenshteinThreshold?: number
 }
 
 let lastLine: string | null = null
@@ -27,8 +28,6 @@ export const findDuplicatesProcessor: FileLineProcessor<
     const brands = options.brands
     const brandKey = getHashKey(line, 2)
 
-    console.log('brandKey', brandKey)
-
     if (brands.has(brandKey)) {
       addToHashMap(resultsMap, brandKey, line)
       return
@@ -37,8 +36,9 @@ export const findDuplicatesProcessor: FileLineProcessor<
 
   if (options?.levenshtein) {
     if (lastLine) {
+      const threshold = options.levenshteinThreshold ?? 0.5
       const distance = levenshteinDistance(lastLine, line)
-      if (distance >= 0.5) {
+      if (distance >= threshold) {
         const key = getHashKey(lastLine, 2)
         addToHashMap(resultsMap, key, line)
         return

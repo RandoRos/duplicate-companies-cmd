@@ -13,43 +13,46 @@ program
   .version('1.0.0')
   .argument('<file>', 'Path to the file containing company names')
   .option('-o, --output <output>', 'Output file path')
-  .option('--brands', 'Use brand names for comparison')
   .option(
-    '--bf, --brand-freq <number>',
-    'Use Cosine similarity algorithm for comparison',
-    '4'
+    '--brands [frequency]',
+    'Use brand names for comparison with optional frequency (default 4)'
   )
   .option(
-    '-l, --levenshtein',
-    'Use Levenshtein distance algorithm for comparison'
+    '-l, --levenshtein [threshold]',
+    'Use Levenshtein distance algorithm for comparison with optional threshold (default 0.5)'
   )
   .action(async (file, options) => {
     console.log('Finding potential duplicate company names in:', file)
 
-    let brands
+    const brands = options.brands
+      ? await createBrandMap(file, {
+          brandFreq:
+            typeof options.brands === 'string' ? Number(options.brands) : 4,
+        })
+      : undefined
 
-    if (options.brands) {
-      console.log('Using brand names for comparison')
-      brands = await createBrandMap(file, {
-        brandFreq: Number(options.brandFreq),
+    try {
+      const duplicates = await findDuplicateCompanies(file, {
+        brands,
+        levenshtein: !!options.levenshtein,
+        levenshteinThreshold:
+          typeof options.levenshtein === 'string'
+            ? Number(options.levenshtein)
+            : 0.5,
       })
+
+      if (options.output) {
+        writeToFile(options.output, duplicates)
+      } else {
+        console.log(Object.values(duplicates))
+      }
+
+      console.log(
+        `Found ${Object.keys(duplicates).length} potential duplicate groups`
+      )
+    } catch (error) {
+      console.error('Error occured when processing file', error)
+      process.exit(1)
     }
-
-    if (options.levenshtein) {
-      console.log('Using Levenshtein distance algorithm for comparison')
-    }
-
-    const duplicates = await findDuplicateCompanies(file, {
-      brands,
-      levenshtein: options.levenshtein,
-    })
-
-    if (options.output) {
-      writeToFile(options.output, duplicates)
-    }
-
-    console.log(
-      `Found ${Object.keys(duplicates).length} potential duplicate group names`
-    )
   })
   .parse(process.argv)

@@ -1,27 +1,24 @@
 import { distance } from 'fastest-levenshtein'
 import compare from 'string-comparison'
-import { normalizeCompanyName } from '@/utils'
+import { normalizeCompanyName, isSingleWorld } from '@/utils'
 
 const jaro = compare.jaroWinkler
-
-export const isSingleWorld = (a: string, b: string) => {
-  return a.split(/-/).length === 1 && b.split(/-/).length === 1
-}
 
 export const lengthBaseIncludes = (a: string, b: string) => {
   const [shorter, longer] = a.length < b.length ? [a, b] : [b, a]
 
-  if (isSingleWorld(shorter, longer)) {
+  // If both strings contain only one word, use Jaro-Winkler similarity
+  if (isSingleWorld(shorter) && isSingleWorld(longer)) {
     return jaro.similarity(shorter, longer) >= 0.8
   }
 
-  if (!shorter.includes('-') && longer.includes('-')) {
+  // If one string have only single world and other has many, check if the longer string first word contains the shorter one
+  if (isSingleWorld(shorter) && !isSingleWorld(longer)) {
     const firstWord = longer.split('-')[0]
     return longer.includes(firstWord)
   }
 
-  const lengthDifference = longer.length - shorter.length
-  if (shorter.length < 3 && lengthDifference > 3) {
+  if (shorter.length < 3 && longer.length - shorter.length > 3) {
     return false
   }
 

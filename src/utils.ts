@@ -66,3 +66,7 @@ export const addToHashMap = (
     map.set(key, [value])
   }
 }
+
+export const isSingleWorld = (str: string) => {
+  return str.split(/-/).length === 1
+}

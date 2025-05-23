@@ -54,15 +54,14 @@ npm run cmd -- files/companies.txt --brands -l -o duplicates.json
 
 ```
 Arguments:
-  file                    Path to the file containing company names
+  file                           Path to the file containing company names
 
 Options:
-  -o, --output <filename>        Output file path
-  --brands                Use brand names for comparison
-  --bf, --brand-freq <n>  Set the brand frequency threshold (default: 4)
-  -l, --levenshtein       Use Levenshtein distance algorithm for comparison
-  -h, --help              Display help for command
-  --version               Display version information
+  -o, --output <output>          Output file path
+  --brands [frequency]           Use brand names for comparison with optional frequency (default: 4)
+  -l, --levenshtein [threshold]  Use Levenshtein distance algorithm for comparison with optional threshold (default: 0.5)
+  -h, --help                     Display help for command
+  --version                      Display version information
 ```
 
 ## How It Works
