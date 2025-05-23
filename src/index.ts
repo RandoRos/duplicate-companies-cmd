@@ -14,22 +14,42 @@ program
   .argument('<file>', 'Path to the file containing company names')
   .option('-o, --output <output>', 'Output file path')
   .option('--brands', 'Use brand names for comparison')
+  .option(
+    '--bf, --brand-freq <number>',
+    'Use Cosine similarity algorithm for comparison',
+    '4'
+  )
+  .option(
+    '-l, --levenshtein',
+    'Use Levenshtein distance algorithm for comparison'
+  )
   .action(async (file, options) => {
     console.log('Finding potential duplicate company names in:', file)
 
-    const params: { brands?: Set<string> } = {}
+    let brands
 
     if (options.brands) {
       console.log('Using brand names for comparison')
-      params.brands = await createBrandMap(file)
+      brands = await createBrandMap(file, {
+        brandFreq: Number(options.brandFreq),
+      })
     }
 
-    const duplicates = await findDuplicateCompanies(file, params)
+    if (options.levenshtein) {
+      console.log('Using Levenshtein distance algorithm for comparison')
+    }
+
+    const duplicates = await findDuplicateCompanies(file, {
+      brands,
+      levenshtein: options.levenshtein,
+    })
 
     if (options.output) {
       writeToFile(options.output, duplicates)
     }
 
-    console.log(`Found ${Object.keys(duplicates).length} potential duplicates`)
+    console.log(
+      `Found ${Object.keys(duplicates).length} potential duplicate group names`
+    )
   })
   .parse(process.argv)

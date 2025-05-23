@@ -1,9 +1,13 @@
 import type { FileLineProcessor } from '@/file/utils'
-import { getHashKey, isPerson } from '@/utils'
+import { getHashKey, isPerson, addToHashMap } from '@/utils'
+import { levenshteinDistance } from '@/comparsions'
 
-type DuplicateProcessorOptions = {
+export type DuplicateProcessorOptions = {
   brands?: Set<string>
+  levenshtein?: boolean
 }
+
+let lastLine: string | null = null
 
 export const findDuplicatesProcessor: FileLineProcessor<
   string[],
@@ -15,27 +19,34 @@ export const findDuplicatesProcessor: FileLineProcessor<
 
   const hashKey = getHashKey(line, 2)
 
+  if (hashKey.length < 2) {
+    return
+  }
+
   if (options?.brands) {
     const brands = options.brands
-    const brandKey = getHashKey(line, 1)
+    const brandKey = getHashKey(line, 2)
+
+    console.log('brandKey', brandKey)
 
     if (brands.has(brandKey)) {
-      if (resultsMap.has(brandKey)) {
-        const companyList = resultsMap.get(brandKey)
-        if (companyList) {
-          companyList.push(line)
-        }
-      } else {
-        resultsMap.set(brandKey, [line])
-      }
+      addToHashMap(resultsMap, brandKey, line)
       return
     }
   }
 
-  if (resultsMap.has(hashKey)) {
-    const duplicates = resultsMap.get(hashKey)
-    duplicates?.push(line)
-  } else {
-    resultsMap.set(hashKey, [line])
+  if (options?.levenshtein) {
+    if (lastLine) {
+      const distance = levenshteinDistance(lastLine, line)
+      if (distance >= 0.5) {
+        const key = getHashKey(lastLine, 2)
+        addToHashMap(resultsMap, key, line)
+        return
+      }
+    }
   }
+
+  addToHashMap(resultsMap, hashKey, line)
+
+  lastLine = line
 }

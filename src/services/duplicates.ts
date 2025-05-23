@@ -1,13 +1,12 @@
-import { findDuplicatesProcessor } from '@/file/processors/duplicates'
+import {
+  findDuplicatesProcessor,
+  type DuplicateProcessorOptions,
+} from '@/file/processors/duplicates'
 import { readFileStream } from '@/file/utils'
-
-type Params = {
-  brands?: Set<string>
-}
 
 export const findDuplicateCompanies = async (
   file: string,
-  params: Params = {}
+  params: DuplicateProcessorOptions
 ): Promise<Record<string, string[]>> => {
   const resultsMap = new Map<string, string[]>()
 
@@ -15,9 +14,7 @@ export const findDuplicateCompanies = async (
     filePath: file,
     resultsMap,
     lineProcessor: findDuplicatesProcessor,
-    options: {
-      brands: params.brands,
-    },
+    options: params,
   })
 
   // Filter out companies with only one value

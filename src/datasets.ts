@@ -12,10 +12,11 @@ export const businessKeywords = [
   'corporation',
   'company',
   'studio',
-  'games',
+  'game',
   'software',
   'entertainment',
   'group',
   'plc',
   'corp',
+  'gmbh',
 ]

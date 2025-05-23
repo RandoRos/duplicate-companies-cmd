@@ -2,7 +2,7 @@ import type { FileLineProcessor } from '@/file/utils'
 import { getHashKey, isPerson } from '@/utils'
 import { lengthBaseIncludes } from '@/comparsions'
 
-let lastBrandName: string | null = null
+let lastKey: string | null = null
 
 export const brandProcessor: FileLineProcessor<number> = async (
   line,
@@ -14,14 +14,13 @@ export const brandProcessor: FileLineProcessor<number> = async (
 
   if (brand.length < 2) return
 
-  const isMatch =
-    lastBrandName && lengthBaseIncludes(brand, lastBrandName)
+  const isMatch = lastKey && lengthBaseIncludes(brand, lastKey)
 
-  if (lastBrandName && isMatch) {
-
-    if (brandMap.has(lastBrandName)) {
-      const count = brandMap.get(lastBrandName) || 0
-      brandMap.set(lastBrandName, count + 1)
+  if (lastKey && isMatch) {
+    if (brandMap.has(lastKey)) {
+      const count = brandMap.get(lastKey) || 0
+      brandMap.set(lastKey, count + 1)
+      return
     }
   } else {
     if (brandMap.has(brand)) {
@@ -31,7 +30,7 @@ export const brandProcessor: FileLineProcessor<number> = async (
       }
     } else {
       brandMap.set(brand, 1)
-      lastBrandName = brand
+      lastKey = brand
     }
   }
 }
