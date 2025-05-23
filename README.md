@@ -2,6 +2,10 @@
 
 A command-line tool for finding potential duplicate company names in a sorted text file using various comparison algorithms and filtering techniques.
 
+```
+The accuracy of results depends on various factors, and there is no one-size-fits-all solution. Effectiveness largely depends on the algorithms and parameters you choose. For the highest accuracy, consider using AI-based semantic comparison methods along with high-quality datasets of global company names and relevant keywords.
+```
+
 ## Features
 
 - **Duplicate Detection**: Find potential duplicate company names in a list
@@ -37,6 +41,9 @@ npm run cmd -- files/companies.txt -o results.json
 # Use brand names for comparison
 npm run cmd -- files/companies.txt --brands
 
+# Configure brand frequency threshold
+npm run cmd -- files/companies.txt --brands --bf 5
+
 # Use Levenshtein distance algorithm
 npm run cmd -- files/companies.txt -l
 
@@ -51,10 +58,12 @@ Arguments:
   file                    Path to the file containing company names
 
 Options:
-  -o, --output <output>   Output file path
+  -o, --output <filename>        Output file path
   --brands                Use brand names for comparison
+  --bf, --brand-freq <n>  Set the brand frequency threshold (default: 4)
   -l, --levenshtein       Use Levenshtein distance algorithm for comparison
   -h, --help              Display help for command
+  --version               Display version information
 ```
 
 ## How It Works
@@ -94,3 +103,4 @@ John Smith
 - [fastest-levenshtein](https://www.npmjs.com/package/fastest-levenshtein): Fast implementation of Levenshtein distance algorithm
 - [@stdlib/datasets-female-first-names-en](https://www.npmjs.com/package/@stdlib/datasets-female-first-names-en): Dataset of English female first names
 - [@stdlib/datasets-male-first-names-en](https://www.npmjs.com/package/@stdlib/datasets-male-first-names-en): Dataset of English male first names
+- [string-comparison](https://www.npmjs.com/package/string-comparison): String comparison algorithms including Cosine similarity
