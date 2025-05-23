@@ -2,9 +2,8 @@
 
 A command-line tool for finding potential duplicate company names in a sorted text file using various comparison algorithms and filtering techniques.
 
-```
-The accuracy of results depends on various factors, and there is no one-size-fits-all solution. Effectiveness largely depends on the algorithms and parameters you choose. For the highest accuracy, consider using AI-based semantic comparison methods along with high-quality datasets of global company names and relevant keywords.
-```
+> **Note**  
+> The accuracy of results depends on various factors, and there is no one-size-fits-all solution. Effectiveness largely depends on the algorithms and parameters you choose. For the highest accuracy, consider using AI-based semantic comparison methods along with high-quality datasets of global company names and relevant keywords.
 
 ## Features
 
