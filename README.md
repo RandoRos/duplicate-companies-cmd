@@ -37,17 +37,20 @@ npm run cmd -- --help
 # Save output to a file
 npm run cmd -- files/companies.txt -o results.json
 
-# Use brand names for comparison
+# Use brand names for comparison with default frequency (4)
 npm run cmd -- files/companies.txt --brands
 
-# Configure brand frequency threshold
-npm run cmd -- files/companies.txt --brands --bf 5
+# Specify a custom brand frequency threshold
+npm run cmd -- files/companies.txt --brands 5
 
-# Use Levenshtein distance algorithm
+# Use Levenshtein distance algorithm with default threshold (0.5)
 npm run cmd -- files/companies.txt -l
 
+# Specify a custom Levenshtein threshold
+npm run cmd -- files/companies.txt -l 0.7
+
 # Combine options
-npm run cmd -- files/companies.txt --brands -l -o duplicates.json
+npm run cmd -- files/companies.txt --brands 5 -l 0.7 -o duplicates.json
 ```
 
 ## Command Arguments
